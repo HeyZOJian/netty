@@ -20,6 +20,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelConfig;
+import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelMetadata;
@@ -32,6 +33,7 @@ import io.netty.channel.EventLoop;
 import io.netty.channel.FileRegion;
 import io.netty.channel.socket.DuplexChannel;
 import io.netty.channel.unix.IovArray;
+import io.netty.channel.unix.Socket;
 import io.netty.channel.unix.SocketWritableByteChannel;
 import io.netty.util.internal.PlatformDependent;
 import io.netty.util.internal.StringUtil;
@@ -66,6 +68,10 @@ public abstract class AbstractKQueueStreamChannel extends AbstractKQueueChannel 
 
     AbstractKQueueStreamChannel(Channel parent, BsdSocket fd, boolean active) {
         super(parent, fd, active, true);
+    }
+
+    AbstractKQueueStreamChannel(BsdSocket fd) {
+        this(null, fd, isSoErrorZero(fd));
     }
 
     @Override
